@@ -1,0 +1,20 @@
+{
+  "name": "bot",
+  "version": "0.0.1",
+  "main": "dist/Main.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node-dev src/Main.ts --transpile-only --ignore node_modules --inspect",
+    "start": "node ."
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^14.0.27",
+    "ts-node-dev": "^1.0.0-pre.56",
+    "typescript": "^3.9.7"
+  },
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0"
+  }
+}
