@@ -10,11 +10,27 @@ export default class AppError {
     this.message = message || "An error ocurred!";
     this.origin = origin || "Unknown Origin";
     this.discordMsg = discordMsg;
-
-    console.error(this.message + " at " + this.origin);
   }
 
   public logOnChannel(): void {
-    this.discordMsg.channel.send(this.message + " at " + this.origin);
+    this.discordMsg.channel.send(this.message);
+  }
+
+  public logOnConsole(): void {
+    console.error(this.message + " at " + this.origin);
+  }
+
+  public replyErrorToUser(): void {
+    this.discordMsg.reply(this.message);
+  }
+
+  public logOnConsoleAndReplyToUser(): void {
+    this.logOnConsole();
+    this.replyErrorToUser();
+  }
+
+  public logOnChannelAndConsole(): void {
+    this.logOnChannel();
+    this.logOnConsole();
   }
 }

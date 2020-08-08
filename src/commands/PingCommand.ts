@@ -8,23 +8,23 @@ export default class PingCommand extends Command<CommandType.PING> {
   }
 
   public async execute(): Promise<void> {
-    if (this.canExecute()) {
-      try {
-        await this.message.channel.send(
-          `My latency is ${this.client.ws.ping}ms`
-        );
-      } catch (err) {
-        throw new AppError(
-          this.message,
-          `Could not execute ${CommandType.PING}. Error: ${err.message}`,
-          `${__filename} at line 20`
-        ).logOnChannel();
-      }
+    if (!this.hasPermissionToExecute()) return;
+
+    try {
+      await this.message.channel.send(
+        `My latency is ${this.client.ws.ping}ms 😀`
+      );
+    } catch (err) {
+      throw new AppError(
+        this.message,
+        `Could not execute ${CommandType.PING}. Error: ${err.message}`,
+        `${__filename} at line 20`
+      ).logOnChannel();
     }
   }
 
   //Everyone has permission to execute.
-  public canExecute(): boolean {
+  public hasPermissionToExecute(): boolean {
     return true;
   }
 }
