@@ -1,19 +1,23 @@
 import Command, { CommandType } from "../Command";
-import { Client, Message, VoiceChannel } from "discord.js";
+import { Client, Message } from "discord.js";
 import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
 
-export default class PlayCommand extends Command<CommandType.PLAY> {
-  private voiceChannel = this.message.member.voice.channel;
+import VoiceChannel from "../../utils/VoiceChannel";
 
+export default class PlayCommand extends Command<CommandType.PLAY> {
   public constructor(private client: Client, private message: Message) {
     super();
   }
 
   public async execute(): Promise<void> {
-    if (!this.hasPermissionToExecute() || !this.userIsInVoiceChannel()) return;
+    if (
+      !this.hasPermissionToExecute() ||
+      !VoiceChannel.userIsInVoiceChannel(this.message)
+    )
+      return;
 
-    this.joinVoiceChannel();
+    VoiceChannel.join(this.message);
 
     //Execute here
   }
@@ -23,24 +27,5 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
       throw new PermissionError(this.message).logOnChannel();
 
     return true;
-  }
-
-  private userIsInVoiceChannel(): boolean {
-    if (!this.voiceChannel) {
-      throw new AppError(
-        this.message,
-        "You need to join a voice channel!",
-        `${__filename}`
-      ).logOnConsoleAndReplyToUser();
-    }
-    return true;
-  }
-
-  private async joinVoiceChannel(): Promise<void> {
-    try {
-      await this.voiceChannel.join();
-    } catch (error) {
-      throw new AppError(this.message, error, __filename).logOnConsole();
-    }
   }
 }
