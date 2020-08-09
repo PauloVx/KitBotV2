@@ -4,11 +4,11 @@ import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
 
 import VoiceChannel from "../../utils/VoiceChannel";
-import YouTube from "../../services/YouTubeVideo";
 import YouTubeVideo from "../../services/YouTubeVideo";
+import SongQueue from "./SongQueue";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
-  //private songQueue = new Map();
+  private queue: SongQueue = new SongQueue();
 
   public constructor(private client: Client, private message: Message) {
     super();
@@ -24,9 +24,9 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     VoiceChannel.join(this.message);
 
     const video = new YouTubeVideo();
-    await video.setVideoInfo("NjdgcHdzvac");
+    await video.setVideoInfo("https://www.youtube.com/watch?v=V_YlZ1JdcVk");
 
-    console.log(video.toString());
+    this.message.channel.send(video.toString());
   }
 
   public hasPermissionToExecute(): boolean {

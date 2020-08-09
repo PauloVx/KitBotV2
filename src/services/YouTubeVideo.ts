@@ -1,4 +1,5 @@
 import ytdl from "ytdl-core";
+import getVideoId from "get-video-id";
 
 export default class YouTubeVideo {
   private videoId: string;
@@ -12,14 +13,14 @@ export default class YouTubeVideo {
   private writers: string;
   private game: string;
 
-  public constructor() {}
+  public async setVideoInfo(videoUrl: string): Promise<void> {
+    const videoId = YouTubeVideo.getIdFromUrl(videoUrl);
 
-  public async setVideoInfo(videoId: string): Promise<void> {
     this.videoId = videoId;
 
     const videoInfo = await this.getVideoInfo();
 
-    this.videoUrl = videoInfo.video_url;
+    this.videoUrl = videoInfo.videoDetails.video_url;
     this.title = videoInfo.videoDetails.title;
     this.channel = videoInfo.videoDetails.ownerChannelName;
     this.uploadDate = videoInfo.videoDetails.uploadDate;
@@ -36,6 +37,11 @@ export default class YouTubeVideo {
   }
 
   public toString(): string {
-    return `\nId: ${this.videoId}\nTitle: ${this.title}\nChannel: ${this.channel}\nUpload Date: ${this.uploadDate}\nLikes: ${this.likes}\nDislikes: ${this.dislikes}\nArtist: ${this.artist}\nWriters: ${this.writers}\nGame: ${this.game}\nUrl: ${this.videoUrl}`;
+    return `\nId: ${this.videoId}\nTitle: ${this.title}\nChannel: ${this.channel}\nUpload Date: ${this.uploadDate}\nLikes: ${this.likes}\nDislikes: ${this.dislikes}\nArtist: ${this.artist}\nWriters: ${this.writers}\nGame: ${this.game}\nUrl: ${this.videoUrl}\n`;
+  }
+
+  public static getIdFromUrl(videoUrl: string): string {
+    const videoId = getVideoId(videoUrl).id;
+    return videoId;
   }
 }
