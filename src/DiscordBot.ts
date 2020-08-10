@@ -53,7 +53,7 @@ export default class DiscordBot {
 
       //* delegates creation to factory & executes
       const command = this.commandFactory.createCommand(message);
-      await command?.execute();
+      await command.execute();
     });
   }
 }

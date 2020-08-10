@@ -1,14 +1,16 @@
-import { Message } from "discord.js";
+import { Message, VoiceConnection } from "discord.js";
 import AppError from "../errors/AppError";
 
 export default class VoiceChannel {
-  public static async join(message: Message): Promise<void> {
+  public static async join(message: Message): Promise<VoiceConnection> {
     const voiceChannel = message.member.voice.channel;
+    let voiceConnection: VoiceConnection;
     try {
-      await voiceChannel.join();
+      voiceConnection = await voiceChannel.join();
     } catch (error) {
       throw new AppError(message, error, __filename).logOnConsole();
     }
+    return voiceConnection;
   }
 
   public static async leave(message: Message): Promise<void> {

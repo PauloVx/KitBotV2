@@ -1,5 +1,6 @@
 import { Client, Message } from "discord.js";
 import Command, { CommandType } from "./Command";
+import CommandParser from "../utils/CommandParser";
 
 import AppError from "../errors/AppError";
 
@@ -10,7 +11,7 @@ export class CommandFactory {
   public constructor(private client: Client, private prefix: string) {}
 
   public createCommand(message: Message): Command<CommandType> | null {
-    const [keyword, args] = this.parseCommand(message.content);
+    const [keyword, args] = CommandParser.parseCommand(message.content);
 
     switch (keyword) {
       case CommandType.PING:
@@ -44,14 +45,5 @@ export class CommandFactory {
           `${__filename} at line 43`
         ).logOnChannel();
     }
-  }
-
-  private parseCommand(messageContent: string): [CommandType, string[]] {
-    const args = messageContent.slice(this.prefix.length).trim().split(/ +/g);
-    const keyword = args.shift()?.toUpperCase() ?? "";
-    const commandType =
-      CommandType[keyword as keyof typeof CommandType] ?? null;
-
-    return [commandType, args];
   }
 }

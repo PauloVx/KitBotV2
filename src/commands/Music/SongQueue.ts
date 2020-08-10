@@ -1,13 +1,7 @@
-import YouTubeVideo from "../../services/YouTubeVideo";
-
 export default class SongQueue {
-  private queue = new Map<YouTubeVideo, number>();
+  private queue = new Map<string, string>();
 
-  public getQueue(): Map<YouTubeVideo, number> {
+  public getQueue(): Map<string, string> {
     return this.queue;
-  }
-
-  public setQueue(queue: Map<YouTubeVideo, number>): void {
-    this.queue = queue;
   }
 }

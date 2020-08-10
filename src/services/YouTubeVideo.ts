@@ -44,4 +44,12 @@ export default class YouTubeVideo {
     const videoId = getVideoId(videoUrl).id;
     return videoId;
   }
+
+  public getTitle(): string {
+    return this.title;
+  }
+
+  public getUrl(): string {
+    return this.videoUrl;
+  }
 }

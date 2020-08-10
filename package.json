@@ -17,6 +17,7 @@
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
     "get-video-id": "^3.1.4",
+    "opusscript": "^0.0.7",
     "ytdl-core": "^3.2.0"
   }
 }
