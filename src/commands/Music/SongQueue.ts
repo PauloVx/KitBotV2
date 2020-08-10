@@ -1,7 +1,9 @@
-export default class SongQueue {
-  private queue = new Map<string, string>();
+import YouTubeVideo from "../../services/YouTube/YouTubeVideo";
 
-  public getQueue(): Map<string, string> {
-    return this.queue;
+export default class SongQueue {
+  private static queue = new Array<YouTubeVideo>();
+
+  public getQueue(): Array<YouTubeVideo> {
+    return SongQueue.queue;
   }
 }

@@ -1,5 +1,5 @@
 import Command, { CommandType } from "../Command";
-import { Client, Message } from "discord.js";
+import { Client, Message, StreamDispatcher } from "discord.js";
 import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
 
@@ -11,6 +11,7 @@ import ytdl from "ytdl-core";
 import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
+  private dispatcher: StreamDispatcher;
   private queue: SongQueue = new SongQueue();
 
   public constructor(private client: Client, private message: Message) {
@@ -29,10 +30,13 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     const finalSearchWords = this.separateSearchArgs(args);
 
     const video = await YouTubeAPI.search(this.message, finalSearchWords);
+    this.queue.getQueue().push(video);
 
-    this.message.channel.send(`**${video.toString()}**`);
+    this.message.channel.send(`__**${video.toString()}**__`);
 
-    this.play(video);
+    console.log(this.queue.getQueue());
+
+    this.play(this.queue.getQueue()[0]);
   }
 
   public hasPermissionToExecute(): boolean {
@@ -46,6 +50,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
   }
 
   private async play(video: YouTubeVideo): Promise<void> {
+    if (!this.queue.getQueue()[0]) return;
     const connection = await VoiceChannel.join(this.message);
 
     const url = video.getUrl();
@@ -56,11 +61,24 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
       highWaterMark: 1 << 25,
     });
 
-    const dispatcher = connection.play(stream);
+    this.dispatcher = connection.play(stream);
 
-    dispatcher.on("end", (reason) => {
-      console.warn(`Finished playing ${title}, reason: ${reason}.`);
-      VoiceChannel.leave(this.message);
+    this.dispatcher.on("start", () => {
+      console.log(`\nA song started playing!`);
+      console.log(video.getTitle());
+      this.message.channel.send(`Now Playing: **${video.getTitle()} **`);
+
+      console.log(`\nQueue: `);
+      console.log(this.queue.getQueue());
+    });
+
+    this.dispatcher.on("finish", (reason: string) => {
+      console.warn(`\nFinished playing ${title}, reason: ${reason}.`);
+      this.queue.getQueue().shift();
+      this.play(this.queue.getQueue()[0]);
+      if (!this.queue.getQueue()[0]) {
+        VoiceChannel.leave(this.message);
+      }
     });
   }
 
