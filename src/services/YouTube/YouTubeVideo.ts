@@ -9,11 +9,12 @@ export default class YouTubeVideo {
   private uploadDate: string;
   private likes: number;
   private dislikes: number;
+  private viewCount: string;
   private artist: string;
   private writers: string;
   private game: string;
 
-  public async setVideoInfo(videoUrl: string): Promise<void> {
+  public async configureVideo(videoUrl: string): Promise<YouTubeVideo> {
     const videoId = YouTubeVideo.getIdFromUrl(videoUrl);
 
     this.videoId = videoId;
@@ -26,9 +27,12 @@ export default class YouTubeVideo {
     this.uploadDate = videoInfo.videoDetails.uploadDate;
     this.likes = videoInfo.videoDetails.likes;
     this.dislikes = videoInfo.videoDetails.dislikes;
+    this.viewCount = videoInfo.videoDetails.viewCount;
     this.artist = videoInfo.videoDetails.media.artist || "Unknown";
     this.writers = videoInfo.videoDetails.media.writers || "Unknown";
     this.game = videoInfo.videoDetails.media.game || "Unknown";
+
+    return this;
   }
 
   private async getVideoInfo(): Promise<ytdl.videoInfo> {
@@ -37,7 +41,7 @@ export default class YouTubeVideo {
   }
 
   public toString(): string {
-    return `\nId: ${this.videoId}\nTitle: ${this.title}\nChannel: ${this.channel}\nUpload Date: ${this.uploadDate}\nLikes: ${this.likes}\nDislikes: ${this.dislikes}\nArtist: ${this.artist}\nWriters: ${this.writers}\nGame: ${this.game}\nUrl: ${this.videoUrl}\n`;
+    return `\nId: ${this.videoId}\nTitle: ${this.title}\nChannel: ${this.channel}\nUpload Date: ${this.uploadDate}\nViews: ${this.viewCount}\nLikes: ${this.likes}\nDislikes: ${this.dislikes}\nArtist: ${this.artist}\nWriters: ${this.writers}\nGame: ${this.game}\nUrl: ${this.videoUrl}\n`;
   }
 
   public static getIdFromUrl(videoUrl: string): string {

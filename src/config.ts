@@ -6,3 +6,5 @@ export const TOKEN = process.env["TOKEN"] || undefined;
 
 export const ACTIVITY =
   process.env["ACTIVITY"] || "Hello! - Did you forget to set my activity?";
+
+export const YOUTUBE_API_KEY = process.env["YOUTUBE_API_KEY"] || undefined;

@@ -1,13 +1,14 @@
 import Command, { CommandType } from "../Command";
-import { Client, Message, Guild } from "discord.js";
+import { Client, Message } from "discord.js";
 import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
 
 import VoiceChannel from "../../utils/VoiceChannel";
-import YouTubeVideo from "../../services/YouTubeVideo";
+import YouTubeVideo from "../../services/YouTube/YouTubeVideo";
 import SongQueue from "./SongQueue";
 import CommandParser from "../../utils/CommandParser";
 import ytdl from "ytdl-core";
+import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
   private queue: SongQueue = new SongQueue();
@@ -24,20 +25,12 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
       return;
 
     const [, args] = CommandParser.parseCommand(this.message.content);
-    const videoUrl = args[0];
-    if (!videoUrl)
-      throw new AppError(
-        this.message,
-        "You need to tell me what to play!",
-        __filename
-      ).logOnConsoleAndReplyToUser();
 
-    const video = new YouTubeVideo();
-    await video.setVideoInfo(videoUrl);
+    const finalSearchWords = this.separateSearchArgs(args);
+
+    const video = await YouTubeAPI.search(this.message, finalSearchWords);
+
     this.message.channel.send(`**${video.toString()}**`);
-    this.queue.getQueue().set(video.getTitle(), video.getUrl());
-
-    console.log(this.queue.getQueue());
 
     this.play(video);
   }
@@ -55,7 +48,10 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
   private async play(video: YouTubeVideo): Promise<void> {
     const connection = await VoiceChannel.join(this.message);
 
-    const stream = ytdl(video.getUrl(), {
+    const url = video.getUrl();
+    const title = video.getTitle();
+
+    const stream = ytdl(url, {
       filter: "audioandvideo",
       highWaterMark: 1 << 25,
     });
@@ -63,8 +59,24 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     const dispatcher = connection.play(stream);
 
     dispatcher.on("end", (reason) => {
-      console.warn(`Finished playing ${video.getTitle}, reason: ${reason}.`);
+      console.warn(`Finished playing ${title}, reason: ${reason}.`);
       VoiceChannel.leave(this.message);
     });
+  }
+
+  private separateSearchArgs(args: Array<string>): string {
+    if (!args[0])
+      throw new AppError(
+        this.message,
+        "You need to tell me what to play!",
+        __filename
+      ).logOnConsoleAndReplyToUser();
+
+    let finalSearchArgs: string = "";
+    args.forEach((arg) => {
+      finalSearchArgs += " " + arg;
+    });
+
+    return finalSearchArgs;
   }
 }
