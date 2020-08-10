@@ -56,11 +56,15 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     const connection = await VoiceChannel.join(this.message);
 
     const stream = ytdl(video.getUrl(), {
-      filter: "audioonly",
+      filter: "audioandvideo",
+      highWaterMark: 1 << 25,
     });
 
     const dispatcher = connection.play(stream);
 
-    dispatcher.on("finish", () => VoiceChannel.leave(this.message));
+    dispatcher.on("end", (reason) => {
+      console.warn(`Finished playing ${video.getTitle}, reason: ${reason}.`);
+      VoiceChannel.leave(this.message);
+    });
   }
 }
