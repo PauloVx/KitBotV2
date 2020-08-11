@@ -1,4 +1,5 @@
 import YouTubeVideo from "../../services/YouTube/YouTubeVideo";
+import Logger from "../../utils/Logger";
 
 export default class SongQueue {
   private queue = new Array<YouTubeVideo>();
@@ -16,6 +17,6 @@ export default class SongQueue {
 
   public destroy(): void {
     this.get().length = 0;
-    console.warn("\x1b[33m", "\n[WARN] The queue was destroyed!", "\x1b[0m");
+    Logger.warn("The queue was destroyed!");
   }
 }

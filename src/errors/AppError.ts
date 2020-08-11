@@ -1,4 +1,5 @@
 import { Message } from "discord.js";
+import Logger from "../utils/Logger";
 
 export default class AppError {
   public readonly message: string;
@@ -17,11 +18,7 @@ export default class AppError {
   }
 
   public logOnConsole(): void {
-    console.error(
-      "\x1b[31m",
-      "\n" + this.message + " at " + this.origin,
-      "\x1b[0m"
-    );
+    Logger.error(this.message + " at " + this.origin);
   }
 
   public replyErrorToUser(): void {

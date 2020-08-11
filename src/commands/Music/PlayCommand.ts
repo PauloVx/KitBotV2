@@ -9,6 +9,7 @@ import CommandParser from "../../utils/CommandParser";
 import VoiceChannel from "../../utils/VoiceChannel";
 import SongQueue from "./SongQueue";
 import Command, { CommandType } from "../Command";
+import Logger from "../../utils/Logger";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
   private dispatcher: StreamDispatcher;
@@ -39,7 +40,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
 
     this.message.channel.send(`**${video.toString()}**`);
 
-    console.log(this.queue.get());
+    Logger.info(this.queue.get().toString());
 
     this.play(this.queue.get()[0]);
   }
@@ -69,16 +70,15 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     this.dispatcher = connection.play(stream);
 
     this.dispatcher.on("start", () => {
-      console.log(`\nA song started playing!`);
-      console.log(video.getTitle());
+      Logger.info(`A song started playing!`);
+      Logger.info("Title: " + video.getTitle());
       this.message.channel.send(`**Now Playing: ${video.getTitle()}**`);
 
-      console.log(`\nQueue: `);
-      console.log(this.queue.get());
+      Logger.log(`Queue: ` + this.queue.get().toString());
     });
 
     this.dispatcher.on("finish", (reason: string) => {
-      console.warn(`\nFinished playing ${title}, reason: ${reason}.`);
+      Logger.warn(`Finished playing ${title}, reason: ${reason}.`);
       this.queue.get().shift();
       this.play(this.queue.get()[0]);
       if (!this.queue.get()[0]) {

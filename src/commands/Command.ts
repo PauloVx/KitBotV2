@@ -1,9 +1,9 @@
 export enum CommandType {
   PING,
   PLAY,
-  PAUSE,
   STOP,
-  SAY,
+  QUEUE,
+  ADD,
 }
 
 export default abstract class Command<CommandType> {

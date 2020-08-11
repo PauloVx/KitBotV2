@@ -18,28 +18,28 @@ export class CommandFactory {
       case CommandType.PING:
         return new Ping(this.client, message);
 
-      case CommandType.SAY:
-        throw new AppError(
-          message,
-          "Command not yet implemented!"
-        ).logOnChannel();
-
       case CommandType.PLAY:
         return new PlayCommand(this.client, message);
-
-      case CommandType.PAUSE:
-        throw new AppError(
-          message,
-          "Command not yet implemented!"
-        ).logOnChannel();
 
       case CommandType.STOP:
         return new StopCommand(this.client, message);
 
+      case CommandType.ADD:
+        throw new AppError(
+          message,
+          "Command not yet implemented!"
+        ).logOnChannel();
+
+      case CommandType.QUEUE:
+        throw new AppError(
+          message,
+          "Command not yet implemented!"
+        ).logOnChannel();
+
       default:
         throw new AppError(
           message,
-          "Unknown Command ",
+          "Unknown Command 🤔",
           `${__filename} at line 43`
         ).logOnChannel();
     }
