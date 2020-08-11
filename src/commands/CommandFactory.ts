@@ -6,6 +6,7 @@ import AppError from "../errors/AppError";
 
 import Ping from "./PingCommand";
 import PlayCommand from "./Music/PlayCommand";
+import StopCommand from "./Music/StopCommand";
 
 export class CommandFactory {
   public constructor(private client: Client, private prefix: string) {}
@@ -33,10 +34,7 @@ export class CommandFactory {
         ).logOnChannel();
 
       case CommandType.STOP:
-        throw new AppError(
-          message,
-          "Command not yet implemented!"
-        ).logOnChannel();
+        return new StopCommand(this.client, message);
 
       default:
         throw new AppError(

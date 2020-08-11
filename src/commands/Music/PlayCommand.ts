@@ -19,11 +19,16 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
   }
 
   public async execute(): Promise<void> {
-    if (
-      !this.hasPermissionToExecute() ||
-      !VoiceChannel.userIsInVoiceChannel(this.message)
-    )
-      return;
+    if (!this.hasPermissionToExecute())
+      throw new PermissionError(this.message).replyErrorToUser();
+
+    if (!VoiceChannel.userIsInVoiceChannel(this.message)) {
+      throw new AppError(
+        this.message,
+        "You need to join a voice channel!",
+        `${__filename}`
+      ).logOnConsoleAndReplyToUser();
+    }
 
     const [, args] = CommandParser.parseCommand(this.message.content);
 
@@ -32,7 +37,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     const video = await YouTubeAPI.search(this.message, finalSearchWords);
     this.queue.get().push(video);
 
-    this.message.channel.send(`__**${video.toString()}**__`);
+    this.message.channel.send(`**${video.toString()}**`);
 
     console.log(this.queue.get());
 
@@ -66,7 +71,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     this.dispatcher.on("start", () => {
       console.log(`\nA song started playing!`);
       console.log(video.getTitle());
-      this.message.channel.send(`Now Playing: **${video.getTitle()} **`);
+      this.message.channel.send(`**Now Playing: ${video.getTitle()}**`);
 
       console.log(`\nQueue: `);
       console.log(this.queue.get());

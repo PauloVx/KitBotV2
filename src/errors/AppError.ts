@@ -17,7 +17,11 @@ export default class AppError {
   }
 
   public logOnConsole(): void {
-    console.error("\x1b[31m", this.message + " at " + this.origin);
+    console.error(
+      "\x1b[31m",
+      "\n" + this.message + " at " + this.origin,
+      "\x1b[0m"
+    );
   }
 
   public replyErrorToUser(): void {

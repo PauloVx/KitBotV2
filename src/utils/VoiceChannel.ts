@@ -25,13 +25,8 @@ export default class VoiceChannel {
   }
 
   public static userIsInVoiceChannel(message: Message): boolean {
-    if (!message.member.voice.channel) {
-      throw new AppError(
-        message,
-        "You need to join a voice channel!",
-        `${__filename}`
-      ).logOnConsoleAndReplyToUser();
-    }
+    if (!message.member.voice.channel) return false;
+
     return true;
   }
 }
