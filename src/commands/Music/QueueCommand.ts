@@ -2,6 +2,7 @@ import Command, { CommandType } from "../Command";
 import { Client, Message } from "discord.js";
 import PermissionError from "../../errors/PermissionError";
 import SongQueue from "./SongQueue";
+import AppError from "../../errors/AppError";
 
 export default class QueueCommand extends Command<CommandType.QUEUE> {
   public constructor(private client: Client, private message: Message) {
@@ -10,10 +11,15 @@ export default class QueueCommand extends Command<CommandType.QUEUE> {
 
   public async execute(): Promise<void> {
     const songQueue = SongQueue.getInstance().get();
-    let titles: string = "";
     let position: number = 0;
-
     let formattedTitles: string = "";
+
+    if (!songQueue[0])
+      throw new AppError(
+        this.message,
+        "The queue is empty! 😴",
+        __filename
+      ).logOnChannelAndConsole();
 
     songQueue.forEach((video) => {
       position++;
