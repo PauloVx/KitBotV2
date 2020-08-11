@@ -11,12 +11,16 @@ export default class QueueCommand extends Command<CommandType.QUEUE> {
   public async execute(): Promise<void> {
     const songQueue = SongQueue.getInstance().get();
     let titles: string = "";
+    let position: number = 0;
+
+    let formattedTitles: string = "";
 
     songQueue.forEach((video) => {
-      titles += video.getTitle() + "\n";
+      position++;
+      formattedTitles += `${position} - ${video.getTitle() + "\n"}`;
     });
 
-    this.message.channel.send(`**Queue: \n${titles}**`);
+    this.message.channel.send(`**Queue:\n ${formattedTitles}**`);
   }
 
   public hasPermissionToExecute(): boolean {
