@@ -1,18 +1,18 @@
-import Command, { CommandType } from "../Command";
 import { Client, Message, StreamDispatcher } from "discord.js";
+import ytdl from "ytdl-core";
+
 import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
-
-import VoiceChannel from "../../utils/VoiceChannel";
 import YouTubeVideo from "../../services/YouTube/YouTubeVideo";
-import SongQueue from "./SongQueue";
-import CommandParser from "../../utils/CommandParser";
-import ytdl from "ytdl-core";
 import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
+import CommandParser from "../../utils/CommandParser";
+import VoiceChannel from "../../utils/VoiceChannel";
+import SongQueue from "./SongQueue";
+import Command, { CommandType } from "../Command";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
   private dispatcher: StreamDispatcher;
-  private queue: SongQueue = new SongQueue();
+  private queue: SongQueue = SongQueue.getInstance();
 
   public constructor(private client: Client, private message: Message) {
     super();
@@ -30,13 +30,13 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     const finalSearchWords = this.separateSearchArgs(args);
 
     const video = await YouTubeAPI.search(this.message, finalSearchWords);
-    this.queue.getQueue().push(video);
+    this.queue.get().push(video);
 
     this.message.channel.send(`__**${video.toString()}**__`);
 
-    console.log(this.queue.getQueue());
+    console.log(this.queue.get());
 
-    this.play(this.queue.getQueue()[0]);
+    this.play(this.queue.get()[0]);
   }
 
   public hasPermissionToExecute(): boolean {
@@ -50,7 +50,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
   }
 
   private async play(video: YouTubeVideo): Promise<void> {
-    if (!this.queue.getQueue()[0]) return;
+    if (!this.queue.get()[0]) return;
     const connection = await VoiceChannel.join(this.message);
 
     const url = video.getUrl();
@@ -69,14 +69,14 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
       this.message.channel.send(`Now Playing: **${video.getTitle()} **`);
 
       console.log(`\nQueue: `);
-      console.log(this.queue.getQueue());
+      console.log(this.queue.get());
     });
 
     this.dispatcher.on("finish", (reason: string) => {
       console.warn(`\nFinished playing ${title}, reason: ${reason}.`);
-      this.queue.getQueue().shift();
-      this.play(this.queue.getQueue()[0]);
-      if (!this.queue.getQueue()[0]) {
+      this.queue.get().shift();
+      this.play(this.queue.get()[0]);
+      if (!this.queue.get()[0]) {
         VoiceChannel.leave(this.message);
       }
     });
