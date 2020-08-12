@@ -27,6 +27,7 @@ export default class QueueCommand extends Command<CommandType.QUEUE> {
     });
 
     this.message.channel.send(`**Queue:\n ${formattedTitles}**`);
+    this.message.channel.send(`**Now Playing: ${songQueue[0].getTitle()}**`);
   }
 
   public hasPermissionToExecute(): boolean {

@@ -8,6 +8,7 @@ import Ping from "./PingCommand";
 import PlayCommand from "./Music/PlayCommand";
 import StopCommand from "./Music/StopCommand";
 import QueueCommand from "./Music/QueueCommand";
+import AddCommand from "./Music/AddCommand";
 
 export class CommandFactory {
   public constructor(private client: Client, private prefix: string) {}
@@ -26,10 +27,7 @@ export class CommandFactory {
         return new StopCommand(this.client, message);
 
       case CommandType.ADD:
-        throw new AppError(
-          message,
-          "Command not yet implemented!"
-        ).logOnChannel();
+        return new AddCommand(this.client, message);
 
       case CommandType.QUEUE:
         return new QueueCommand(this.client, message);

@@ -31,9 +31,18 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
       ).logOnConsoleAndReplyToUser();
     }
 
+    //If a song is being played, user should use add command.
+    if (this.queue.get()[0]) {
+      this.message.reply("Use add command to add songs to the queue!");
+      return;
+    }
+
     const [, args] = CommandParser.parseCommand(this.message.content);
 
-    const finalSearchWords = this.separateSearchArgs(args);
+    const finalSearchWords = CommandParser.separateSearchArgs(
+      this.message,
+      args
+    );
 
     const video = await YouTubeAPI.search(this.message, finalSearchWords);
     this.queue.get().push(video);
@@ -70,8 +79,7 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     this.dispatcher = connection.play(stream);
 
     this.dispatcher.on("start", () => {
-      Logger.info(`A song started playing!`);
-      Logger.info("Title: " + video.getTitle());
+      Logger.info(`Started playing: ${video.getTitle()}`);
       this.message.channel.send(`**Now Playing: ${video.getTitle()}**`);
 
       Logger.log(`Queue: ` + this.queue.get().toString());
@@ -85,21 +93,5 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
         VoiceChannel.leave(this.message);
       }
     });
-  }
-
-  private separateSearchArgs(args: Array<string>): string {
-    if (!args[0])
-      throw new AppError(
-        this.message,
-        "You need to tell me what to play!",
-        __filename
-      ).logOnConsoleAndReplyToUser();
-
-    let finalSearchArgs: string = "";
-    args.forEach((arg) => {
-      finalSearchArgs += " " + arg;
-    });
-
-    return finalSearchArgs;
   }
 }
