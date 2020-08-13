@@ -9,6 +9,7 @@ import PlayCommand from "./Music/PlayCommand";
 import StopCommand from "./Music/StopCommand";
 import QueueCommand from "./Music/QueueCommand";
 import AddCommand from "./Music/AddCommand";
+import SkipCommand from "./Music/SkipCommand";
 
 export class CommandFactory {
   public constructor(private client: Client, private prefix: string) {}
@@ -25,6 +26,9 @@ export class CommandFactory {
 
       case CommandType.STOP:
         return new StopCommand(this.client, message);
+
+      case CommandType.SKIP:
+        return new SkipCommand(this.client, message);
 
       case CommandType.ADD:
         return new AddCommand(this.client, message);

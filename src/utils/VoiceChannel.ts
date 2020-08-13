@@ -1,5 +1,7 @@
 import { Message, VoiceConnection } from "discord.js";
 import AppError from "../errors/AppError";
+import internal, { Stream } from "stream";
+import Logger from "./Logger";
 
 export default class VoiceChannel {
   public static async join(message: Message): Promise<VoiceConnection> {
@@ -10,15 +12,18 @@ export default class VoiceChannel {
     } catch (error) {
       throw new AppError(message, error, __filename).logOnConsole();
     }
+
+    Logger.warn("Joined Voice Channel");
     return voiceConnection;
   }
 
-  public static async leave(message: Message): Promise<void> {
+  public static leave(message: Message): Promise<void> {
     if (!this.userIsInVoiceChannel) return;
 
     const voiceChannel = message.member.voice.channel;
     try {
-      await voiceChannel.leave();
+      voiceChannel.leave();
+      Logger.warn("Left Voice Channel");
     } catch (error) {
       throw new AppError(message, error, __filename).logOnConsole();
     }
@@ -28,5 +33,27 @@ export default class VoiceChannel {
     if (!message.member.voice.channel) return false;
 
     return true;
+  }
+
+  public static async getConnection(
+    message: Message
+  ): Promise<VoiceConnection> {
+    return await VoiceChannel.join(message);
+  }
+
+  public static async setDispatcher(
+    message: Message,
+    stream: internal.Readable
+  ) {
+    const connection = await VoiceChannel.getConnection(message);
+    return connection.play(stream);
+  }
+
+  public static async getDispatcher(
+    message: Message,
+    stream: internal.Readable
+  ) {
+    const dispatcher = await VoiceChannel.setDispatcher(message, stream);
+    return dispatcher;
   }
 }

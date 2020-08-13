@@ -66,26 +66,24 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
 
   private async play(video: YouTubeVideo): Promise<void> {
     if (!this.queue.get()[0]) return;
-    const connection = await VoiceChannel.join(this.message);
+
+    await VoiceChannel.getConnection(this.message);
 
     const url = video.getUrl();
     const title = video.getTitle();
 
-    const stream = ytdl(url, {
-      filter: "audioandvideo",
-      highWaterMark: 1 << 25,
-    });
+    const stream = YouTubeAPI.getStream(url);
 
-    this.dispatcher = connection.play(stream);
+    const dispatcher = VoiceChannel.setDispatcher(this.message, stream);
 
-    this.dispatcher.on("start", () => {
+    (await dispatcher).on("start", () => {
       Logger.info(`Started playing: ${video.getTitle()}`);
       this.message.channel.send(`**Now Playing: ${video.getTitle()}**`);
 
       Logger.log(`Queue: ` + this.queue.get().toString());
     });
 
-    this.dispatcher.on("finish", (reason: string) => {
+    (await dispatcher).on("finish", (reason: string) => {
       Logger.warn(`Finished playing ${title}, reason: ${reason}.`);
       this.queue.get().shift();
       this.play(this.queue.get()[0]);

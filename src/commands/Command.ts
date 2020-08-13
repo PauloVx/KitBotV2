@@ -2,6 +2,7 @@ export enum CommandType {
   PING,
   PLAY,
   STOP,
+  SKIP,
   QUEUE,
   ADD,
 }

@@ -3,6 +3,7 @@ import { YOUTUBE_API_KEY } from "../../config";
 import AppError from "../../errors/AppError";
 import { Message } from "discord.js";
 import YouTubeVideo from "./YouTubeVideo";
+import ytdl from "ytdl-core";
 
 export default class YouTubeAPI {
   private static youTubeApi = new YouTube(YOUTUBE_API_KEY);
@@ -27,5 +28,14 @@ export default class YouTubeAPI {
     const video = new YouTubeVideo().configureVideo(videoUrl);
 
     return video;
+  }
+
+  public static getStream(url: string) {
+    const stream = ytdl(url, {
+      filter: "audioandvideo",
+      highWaterMark: 1 << 25,
+    });
+
+    return stream;
   }
 }
