@@ -5,6 +5,7 @@ export enum CommandType {
   SKIP,
   QUEUE,
   ADD,
+  HELP,
 }
 
 export default abstract class Command<CommandType> {

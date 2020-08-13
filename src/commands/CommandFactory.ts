@@ -4,7 +4,8 @@ import CommandParser from "../utils/CommandParser";
 
 import AppError from "../errors/AppError";
 
-import Ping from "./PingCommand";
+import PingCommand from "./PingCommand";
+import HelpCommand from "./HelpCommand";
 import PlayCommand from "./Music/PlayCommand";
 import StopCommand from "./Music/StopCommand";
 import QueueCommand from "./Music/QueueCommand";
@@ -19,7 +20,10 @@ export class CommandFactory {
 
     switch (keyword) {
       case CommandType.PING:
-        return new Ping(this.client, message);
+        return new PingCommand(this.client, message);
+
+      case CommandType.HELP:
+        return new HelpCommand(this.client, message);
 
       case CommandType.PLAY:
         return new PlayCommand(this.client, message);
