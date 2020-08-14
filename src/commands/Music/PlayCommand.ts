@@ -26,8 +26,8 @@ export default class PlayCommand extends Command<CommandType.PLAY> {
     if (!VoiceChannel.userIsInVoiceChannel(this.message)) {
       throw new AppError(
         this.message,
-        "You need to join a voice channel!",
-        `${__filename}`
+        "You need to join a voice channel to play music!",
+        __filename
       ).logOnConsoleAndReplyToUser();
     }
 

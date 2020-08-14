@@ -2,6 +2,7 @@ import { Client, Message } from "discord.js";
 
 import { TOKEN, ACTIVITY, PREFIX } from "./config";
 import { CommandFactory } from "./commands/CommandFactory";
+import Logger from "./utils/Logger";
 
 export default class DiscordBot {
   private static instance: DiscordBot;
@@ -64,7 +65,9 @@ export default class DiscordBot {
 
       //* delegates creation to factory & executes
       const command = this.commandFactory.createCommand(message);
-      await command.execute();
+      try {
+        await command.execute();
+      } catch (e) {}
     });
   }
 }
