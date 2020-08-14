@@ -5,7 +5,7 @@
 yarn install - Para instalar as dependências.\
 yarn build - Para criar os arquivos javascript.\
 yarn start - Para executar.\
-yarn dev - Para executar diretamente os arquivos typescript.\
+yarn dev - Para executar diretamente os arquivos typescript.
 
 ## Screenshots
 ### Comando help
