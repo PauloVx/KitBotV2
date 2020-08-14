@@ -35,6 +35,7 @@ export default class SkipCommand extends Command<CommandType.SKIP> {
         `**Skipped: ${SongQueue.getInstance().get()[0].getTitle()}**`
       );
 
+      SongQueue.getInstance().destroy();
       await VoiceChannel.leave(this.message);
       return;
     }
