@@ -1,7 +1,7 @@
+import { Message } from "discord.js";
 import { CommandType } from "../commands/Command";
 import { PREFIX } from "../config";
 import AppError from "../errors/AppError";
-import { Message } from "discord.js";
 
 export default class CommandParser {
   public static parseCommand(messageContent: string): [CommandType, string[]] {

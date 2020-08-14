@@ -1,5 +1,5 @@
-import Command, { CommandType } from "./Command";
 import { Message, Client } from "discord.js";
+import Command, { CommandType } from "./Command";
 import { PREFIX } from "../config";
 
 export default class HelpCommand extends Command<CommandType.HELP> {

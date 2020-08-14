@@ -1,15 +1,17 @@
 import { Client, Message, StreamDispatcher } from "discord.js";
-import ytdl from "ytdl-core";
+import Command, { CommandType } from "../Command";
 
 import AppError from "../../errors/AppError";
 import PermissionError from "../../errors/PermissionError";
+
 import YouTubeVideo from "../../services/YouTube/YouTubeVideo";
 import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
+
 import CommandParser from "../../utils/CommandParser";
 import VoiceChannel from "../../utils/VoiceChannel";
-import SongQueue from "./SongQueue";
-import Command, { CommandType } from "../Command";
 import Logger from "../../utils/Logger";
+
+import SongQueue from "./SongQueue";
 
 export default class PlayCommand extends Command<CommandType.PLAY> {
   private dispatcher: StreamDispatcher;

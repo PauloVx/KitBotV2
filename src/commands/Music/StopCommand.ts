@@ -1,9 +1,12 @@
-import Command, { CommandType } from "../Command";
 import { Client, Message } from "discord.js";
-import PermissionError from "../../errors/PermissionError";
+
+import Command, { CommandType } from "../Command";
 import SongQueue from "./SongQueue";
-import VoiceChannel from "../../utils/VoiceChannel";
+
 import AppError from "../../errors/AppError";
+import PermissionError from "../../errors/PermissionError";
+
+import VoiceChannel from "../../utils/VoiceChannel";
 
 export default class StopCommand extends Command<CommandType.STOP> {
   public constructor(private client: Client, private message: Message) {

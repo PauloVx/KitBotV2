@@ -1,6 +1,6 @@
 import { Message, VoiceConnection } from "discord.js";
 import AppError from "../errors/AppError";
-import internal, { Stream } from "stream";
+import internal from "stream";
 import Logger from "./Logger";
 
 export default class VoiceChannel {

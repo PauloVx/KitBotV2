@@ -27,21 +27,12 @@ export default class DiscordBot {
     this.client
       .login(TOKEN)
       .then(() => {
-        console.warn(
-          "\x1b[32m",
-          "\x1b[1m",
-          "\n[INFO] Connected to Discord! Username: " +
-            this.client.user.username,
-          "\x1b[0m"
+        Logger.info(
+          "Connected to discord! Username: " + this.client.user.username
         );
       })
       .catch((err) => {
-        console.error(
-          "\x1b[31m",
-          "\x1b[1m",
-          "\n[ERROR] Login Error: " + err,
-          "\x1b[0m"
-        );
+        Logger.error("Login Error: " + err);
       });
   }
 

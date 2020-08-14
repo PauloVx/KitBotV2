@@ -1,11 +1,14 @@
-import Command, { CommandType } from "../Command";
 import { Client, Message } from "discord.js";
-import PermissionError from "../../errors/PermissionError";
+import Command, { CommandType } from "../Command";
 import SongQueue from "./SongQueue";
+
+import AppError from "../../errors/AppError";
+import PermissionError from "../../errors/PermissionError";
+
 import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
+
 import CommandParser from "../../utils/CommandParser";
 import Logger from "../../utils/Logger";
-import AppError from "../../errors/AppError";
 import VoiceChannel from "../../utils/VoiceChannel";
 
 export default class AddCommand extends Command<CommandType.ADD> {

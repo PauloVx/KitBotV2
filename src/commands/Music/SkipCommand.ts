@@ -1,11 +1,13 @@
-import Command, { CommandType } from "../Command";
 import { Client, Message } from "discord.js";
+
+import Command, { CommandType } from "../Command";
+import SongQueue from "./SongQueue";
+
 import PermissionError from "../../errors/PermissionError";
 import AppError from "../../errors/AppError";
+
 import VoiceChannel from "../../utils/VoiceChannel";
-import SongQueue from "./SongQueue";
 import YouTubeAPI from "../../services/YouTube/YouTubeAPI";
-import Logger from "../../utils/Logger";
 
 export default class SkipCommand extends Command<CommandType.SKIP> {
   public constructor(private client: Client, private message: Message) {
