@@ -25,7 +25,7 @@ export default class YouTubeAPI {
 
     const videoId = searchResult[0].id;
     const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
-    const video = new YouTubeVideo().configureVideo(videoUrl);
+    const video = new YouTubeVideo().configureVideo(videoUrl)/*.catch(e => console.log(e))*/;
 
     return video;
   }

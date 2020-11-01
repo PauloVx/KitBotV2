@@ -54,6 +54,7 @@ export default class YouTubeVideo {
   }
 
   public getUrl(): string {
+    console.log(this.videoUrl);
     return this.videoUrl;
   }
 }
